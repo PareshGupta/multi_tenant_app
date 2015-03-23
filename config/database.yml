@@ -1,0 +1,24 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: 5
+  username: multi_tenant
+  password: vinsol
+  hostname: localhost
+  timeout: 5000
+
+development:
+  <<: *default
+  database: multi_tenant_development
+
+test:
+  <<: *default
+  database: multi_tenant_test
+
+production:
+  <<: *default
+  database: multi_tenant_production
+
+staging:
+  <<: *default
+  database: multi_tenant_staging
