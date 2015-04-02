@@ -2,19 +2,33 @@ class ApplicationController < ActionController::Base
 
   protect_from_forgery with: :exception
 
-  before_action :authenticate_user!
-  before_filter :handle_subdomain
+  before_action :load_schema, :authenticate_user!
 
-  def after_sign_in_path_for(resource)
-    articles_path
-  end
+  private
 
-  def handle_subdomain
-    if @user = User.find_by_subdomain(request.subdomain)
-      PgTools.set_search_path @user.subdomain
-    else
-      PgTools.restore_default_search_path
+    def load_schema
+      Apartment::Tenant.switch!('public')
+
+      return unless request.subdomain.present?
+
+      if current_account
+        Apartment::Tenant.switch!(request.subdomain)
+      else
+        redirect_to root_url(subdomain: false)
+      end
     end
-  end
+
+    def current_account
+      @current_account ||= Account.find_by(subdomain: request.subdomain)
+    end
+    helper_method :current_account
+
+    def after_sign_in_path_for(resource)
+      articles_path
+    end
+
+    def after_sign_out_path_for(resource)
+      new_user_session_path
+    end
 
 end

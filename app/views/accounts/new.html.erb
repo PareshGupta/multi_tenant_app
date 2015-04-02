@@ -1,0 +1,36 @@
+<h2>Create An Account</h2>
+
+<%= form_for @account do |f| %>
+  <%= f.fields_for :owner do |o| %>
+    <div>
+      <%= o.label :name, 'Name' %><br/>
+      <%= o.text_field :name %>
+    </div>
+
+    <div>
+      <%= o.label :email, 'Email' %><br/>
+      <%= o.email_field :email %>
+    </div>
+
+    <div>
+      <%= o.label :password, 'Password' %><br/>
+      <%= o.password_field :password %>
+    </div>
+
+    <div>
+      <%= o.label :password_confirmation, 'Confirm Password' %><br/>
+      <%= o.password_field :password_confirmation %>
+    </div>
+  <% end %>
+
+  <div>
+    <%= f.label :subdomain %><br/>
+    <%= f.text_field :subdomain %>
+  </div>
+
+  <br/>
+
+  <%= f.button :submit %>
+<% end %>
+
+
